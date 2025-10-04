@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.R.attr.contentDescription
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.semantics.Role
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import android.R.attr.enabled
+import android.R.attr.value
 import android.os.Bundle
 import android.renderscript.ScriptGroup
 import android.text.BoringLayout
@@ -66,11 +68,16 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.TextField
@@ -80,6 +87,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -287,13 +296,92 @@ fun textfield() {
             keyboardType = KeyboardType.Phone
         ),
         keyboardActions = KeyboardActions(
-            onDone = {keyboardController?.hide()}
+            onDone = { keyboardController?.hide() }
         )
     )
 
-
 }
 
+@Composable
+fun outlineTextField() {
+    var mail by remember { mutableStateOf("") }
+    OutlinedTextField(
+        value = mail,
+        onValueChange = { newText ->
+            mail = newText
+        },
+        label = { Text(text = "Email/Username") },
+        placeholder = { Text(text = "Email/username") },
+        leadingIcon = {
+            Icon(
+                Icons.Default.Email,
+                contentDescription = null
+            )
+        },
+        modifier = Modifier.fillMaxWidth(),
+
+        )
+}
+
+@Composable
+fun outlinePassword() {
+    var password by remember { mutableStateOf("") }
+    var showPassWord by remember { mutableStateOf(false) }
+    OutlinedTextField(
+        value = password,
+        onValueChange = {
+            password = it
+        },
+        label = { Text(text = "Password") },
+        placeholder = { Text(text = "Enter your password") },
+        leadingIcon = {
+            Icon(
+                Icons.Default.Lock,
+                contentDescription = null
+            )
+        },
+        trailingIcon = {
+            IconButton(onClick = { showPassWord = !showPassWord }) {
+                Icon(
+                    if (showPassWord) Icons.Default.Close else Icons.Default.Info,
+                    contentDescription = null
+                )
+            }
+        },
+        visualTransformation = if (showPassWord) VisualTransformation.None else PasswordVisualTransformation(),
+        modifier = Modifier.fillMaxWidth(),
+    )
+}
+
+@Composable
+fun sreachOutline() {
+    var sreach by remember { mutableStateOf("") }
+    OutlinedTextField(
+        value = sreach,
+        onValueChange = {
+            sreach = it
+        },
+        label = { Text(text = "Search") },
+        leadingIcon = {
+            Icon(
+                Icons.Default.Search,
+                contentDescription = null
+            )
+        },
+        trailingIcon = {
+            IconButton(onClick = { sreach = "" }) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = null
+                )
+            }
+        },
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(text = "Search") },
+        shape = RoundedCornerShape(24.dp),
+
+        )
+}
 
 @Composable
 fun HomeScreen() {
@@ -304,6 +392,12 @@ fun HomeScreen() {
     ) {
         Spacer(modifier = Modifier.height(30.dp))
         textfield()
+        Spacer(modifier = Modifier.height(30.dp))
+        outlineTextField()
+        Spacer(modifier = Modifier.height(30.dp))
+        outlinePassword()
+        Spacer(modifier = Modifier.height(30.dp))
+        sreachOutline()
     }
 }
 
